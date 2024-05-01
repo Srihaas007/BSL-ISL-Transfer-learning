@@ -1,6 +1,3 @@
-# BSL-ISL-Transfer-learning
-Implementation of ISL model using BSL model as Base and trained the model - method transfer learning
-
 # Project Title: Enhancing Indian Sign Language Recognition using Transfer Learning and Deep Learning Techniques
 
 ## Abstract:
