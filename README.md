@@ -19,3 +19,42 @@ The project findings highlight the potential of deep learning and transfer learn
 In conclusion, this project demonstrates the effectiveness of transfer learning and deep learning techniques in enhancing ISL recognition. By leveraging pre-trained models and adapting them to specific sign languages, we can overcome data limitations and improve the accuracy and accessibility of SLR systems. The project contributes to the ongoing efforts to develop inclusive communication technologies for the Deaf community and sets the stage for future advancements in SLR research and application.
 
 Overall, the project underscores the importance of leveraging advanced machine learning techniques to address complex societal challenges and promote inclusivity and accessibility for all individuals, regardless of their abilities or communication preferences.
+
+
+# Transfer Learning Pseudocode for Sign Language Recognition
+
+## Pre-trained Models:
+- The pre-trained BSL model can be obtained from the [GitHub repository](https://github.com/gulvarol/bsl1k).
+- Access the ISL dataset used in this project [here](https://dl.acm.org/doi/10.1145/3394171.3413528#sec-supp).
+- The BSL dataset was sourced from BBC and Oxford. To access the dataset, contact BBC for permission by submitting a form available [here](https://www.robots.ox.ac.uk/~vgg/data/bobsl/).
+
+## Transfer Learning Procedure:
+```python
+# Load Pre-trained BSL Model
+model = load_model("pre_trained_BSL_model.h5")
+
+# Freeze early layers to retain learned features
+for layer in model.layers[:N]:
+    layer.trainable = False
+
+# Replace top layers for ISL-specific features
+model.pop()
+new_output = Dense(num_ISL_classes, activation='softmax')(model.output)
+new_model = Model(inputs=model.input, outputs=new_output)
+
+# Compile the new model
+new_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Prepare ISL Data
+train_data, validation_data = preprocess_data("ISL_dataset_path")
+
+# Data Augmentation
+augmentation = ImageDataGenerator(rotation_range=20, width_shift_range=0.2,
+                                  height_shift_range=0.2, shear_range=0.2,
+                                  zoom_range=0.2, horizontal_flip=True, fill_mode='nearest')
+
+# Train the Model
+new_model.fit(augmentation.flow(train_data), epochs=50, validation_data=validation_data)
+
+# Save the Fine-tuned Model
+new_model.save("ISL_recognition_model.h5")
